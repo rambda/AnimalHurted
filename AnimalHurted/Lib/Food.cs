@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace AnimalHurtedLib
 {
-    public class Food
+    public partial class Food
     {
         public int Cost { get; set; } = Game.FoodCost;
 

@@ -1,20 +1,20 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Assets/card_selection.png" type="Texture" id=1]
-[ext_resource path="res://Assets/card_shadow.png" type="Texture" id=2]
+[ext_resource path="res://Assets/card_selection.png" type="Texture2D" id=1]
+[ext_resource path="res://Assets/card_shadow.png" type="Texture2D" id=2]
 [ext_resource path="res://Scenes/FoodArea2D.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/AbilityHintNode2D.tscn" type="PackedScene" id=4]
 
 [node name="Node2D" type="Node2D"]
 
-[node name="ShadowSprite" type="Sprite" parent="."]
+[node name="ShadowSprite" type="Sprite2D" parent="."]
 modulate = Color( 1, 1, 1, 0.372549 )
 position = Vector2( 0, -16 )
 texture = ExtResource( 2 )
 
 [node name="Area2D" parent="." instance=ExtResource( 3 )]
 
-[node name="HoverSprite" type="Sprite" parent="."]
+[node name="HoverSprite" type="Sprite2D" parent="."]
 visible = false
 texture = ExtResource( 1 )
 

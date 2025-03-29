@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/smack.wav-2ebd6bb685c67fa7625d0397f85dc91c.sample"
+type="AudioStreamWAV"
+uid="uid://cu4xsegar0jcw"
+path="res://.godot/imported/smack.wav-2ebd6bb685c67fa7625d0397f85dc91c.sample"
 
 [deps]
 
 source_file="res://Assets/smack.wav"
-dest_files=[ "res://.import/smack.wav-2ebd6bb685c67fa7625d0397f85dc91c.sample" ]
+dest_files=["res://.godot/imported/smack.wav-2ebd6bb685c67fa7625d0397f85dc91c.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

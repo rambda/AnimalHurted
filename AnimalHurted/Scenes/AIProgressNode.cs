@@ -8,7 +8,7 @@ using MonteCarlo;
 using AnimalHurtedLib;
 using AnimalHurtedLib.AI;
 
-public class AIProgressNode : Node
+public partial class AIProgressNode : Node
 {
     bool _abort;
     IOrderedEnumerable<MonteCarloTreeSearch.Node<GameAIPlayer, Move>> _result;
@@ -16,15 +16,15 @@ public class AIProgressNode : Node
     public ProgressBar ProgressBar { get { return GetNode<ProgressBar>("ProgressBar"); } }
 
     [Signal]
-    public delegate void ProgressSignal();
+    public delegate void ProgressSignalEventHandler(int numIterations);
 
     [Signal]
-    public delegate void ProgressFinishedSignal();
+    public delegate void ProgressFinishedSignalEventHandler();
 
     public override void _Ready()
     {
-        Connect("ProgressSignal", this, "_signal_Progress", null, (int)ConnectFlags.Deferred);
-        Connect("ProgressFinishedSignal", this, "_signal_ProgressFinished", null, (int)ConnectFlags.Deferred);
+        ProgressSignal += _signal_Progress;
+        ProgressFinishedSignal += _signal_ProgressFinished;
 
         ProgressBar.MaxValue = AISingleton.AIMaxIterations;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,14 +21,14 @@ namespace MonteCarlo
 
         void ApplyAction(TAction action);
 
-        double GetResult(TPlayer forPlayer);
+        double GetData(TPlayer forPlayer);
     }
 
-    public class MonteCarloTreeSearch
+    public partial class MonteCarloTreeSearch
     {
         public static double UCTK = 1.0;
 
-        public class Node<TPlayer, TAction> : IMctsNode<TAction> where TPlayer : IPlayer where TAction: IAction
+        public partial class Node<TPlayer, TAction> : IMctsNode<TAction> where TPlayer : IPlayer where TAction: IAction
         {
             public Node(IState<TPlayer, TAction> state, TAction action = default(TAction), Node<TPlayer, TAction> parent = null)
             {
@@ -109,7 +109,7 @@ namespace MonteCarlo
                     while (node != null)
                     {
                         node.NumRuns++;
-                        node.NumWins += state.GetResult(this.Player);
+                        node.NumWins += state.GetData(this.Player);
                         node = node.Parent;
                     }
                 }

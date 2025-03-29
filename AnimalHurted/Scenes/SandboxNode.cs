@@ -2,7 +2,7 @@ using Godot;
 using System;
 using AnimalHurtedLib;
 
-public class SandboxNode : Node
+public partial class SandboxNode : Node
 {
     public DeckNode2D DeckNode2D { get { return GetNode<DeckNode2D>("DeckNode2D"); } }
     public PanelContainer CardContainer { get { return GetNode<PanelContainer>("CardContainer"); } }
@@ -16,11 +16,11 @@ public class SandboxNode : Node
     public LineEdit LevelEdit { get { return GetNode<LineEdit>("CardAttrsNode2D/LevelEdit"); } }
 
     [Signal]
-    public delegate void CardSelectionChangedSignal();
+    public delegate void CardSelectionChangedSignalEventHandler();
 
     public override void _Ready()
     {
-        Connect("CardSelectionChangedSignal", this, "_signal_CardSelectionChanged", null, (int)ConnectFlags.Deferred);
+        Connect(SignalName.CardSelectionChangedSignal, Callable.From((int cardIndex) => _signal_CardSelectionChanged(cardIndex)), (uint)ConnectFlags.Deferred);
         RenderAbilities();
         RenderFoodAbilities();
         DeckNode2D.RenderDeck(GameSingleton.Instance.Game.Player1.BuildDeck);
@@ -91,9 +91,9 @@ public class SandboxNode : Node
             if (string.IsNullOrEmpty(FindEdit.Text) || type.Name.ToUpper().IndexOf(FindEdit.Text.ToUpper()) == 0)
             {
                 var res = GD.Load($"res://Assets/Pets/{type.Name}.png");
-                var node = GD.Load<PackedScene>("res://Scenes/SandboxItemNode.tscn").Instance<SandboxItemNode>();
+                var node = GD.Load<PackedScene>("res://Scenes/SandboxItemNode.tscn").Instantiate<SandboxItemNode>();
                 node.TypeName = type.Name;
-                node.TextureRect.Texture = res as Godot.Texture;
+                node.TextureRect.Texture = res as Godot.Texture2D;
                 CardVBoxContainer.AddChild(node);
             }
         }
@@ -104,9 +104,9 @@ public class SandboxNode : Node
         foreach (var type in FoodAbilityList.Instance.AllAbilities)
         {
             var res = GD.Load($"res://Assets/FoodAbilities/{type.Name}.png");
-            var node = GD.Load<PackedScene>("res://Scenes/SandboxItemNode.tscn").Instance<SandboxItemNode>();
+            var node = GD.Load<PackedScene>("res://Scenes/SandboxItemNode.tscn").Instantiate<SandboxItemNode>();
             node.TypeName = type.Name;
-            node.TextureRect.Texture = res as Godot.Texture;
+            node.TextureRect.Texture = res as Godot.Texture2D;
             FoodAbilityHBoxContainer.AddChild(node);
         }
     }
@@ -129,7 +129,7 @@ public class SandboxNode : Node
     {
         GameSingleton.Instance.Sandboxing = false;
 
-        GetTree().ChangeScene("res://Scenes/MainNode.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/MainNode.tscn");
     }
 
     public void _on_BattleButton_pressed()
@@ -144,7 +144,7 @@ public class SandboxNode : Node
         // restore for rendering in next scene
         GameSingleton.Instance.RestoreBattleDecks();
 
-        GetTree().ChangeScene("res://Scenes/BattleNode.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/BattleNode.tscn");
     }
 
     public void _on_FindEdit_text_changed(string newText)

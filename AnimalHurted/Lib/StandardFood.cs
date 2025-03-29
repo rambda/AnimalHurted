@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace AnimalHurtedLib
 {
-    public class AppleFood : Food
+    public partial class AppleFood : Food
     {
         public override string GetMessage()
         {
@@ -23,7 +23,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class HoneyFood : Food
+    public partial class HoneyFood : Food
     {
         public override string GetMessage()
         {
@@ -37,7 +37,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class CupcakeFood : Food
+    public partial class CupcakeFood : Food
     {
         public override string GetMessage()
         {
@@ -55,7 +55,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class MeatBoneFood : Food
+    public partial class MeatBoneFood : Food
     {
         public override string ToString()
         {
@@ -74,7 +74,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SleepingPillFood : Food
+    public partial class SleepingPillFood : Food
     {
         public SleepingPillFood()
         {
@@ -98,7 +98,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class GarlicFood : Food
+    public partial class GarlicFood : Food
     {
         public override string GetMessage()
         {
@@ -112,7 +112,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SaladBowlFood : Food
+    public partial class SaladBowlFood : Food
     {
         public override string ToString()
         {
@@ -146,7 +146,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class CannedFoodFood : Food
+    public partial class CannedFoodFood : Food
     {
         public override string ToString()
         {
@@ -166,7 +166,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class PearFood : Food
+    public partial class PearFood : Food
     {
         public override string GetMessage()
         {
@@ -184,7 +184,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ChiliFood : Food
+    public partial class ChiliFood : Food
     {
         public override string GetMessage()
         {
@@ -198,7 +198,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ChocolateFood : Food
+    public partial class ChocolateFood : Food
     {
         int _oldLevel;
 
@@ -222,7 +222,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SushiFood : Food
+    public partial class SushiFood : Food
     {
         public override string GetMessage()
         {
@@ -249,7 +249,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class MelonFood : Food
+    public partial class MelonFood : Food
     {
         public override string GetMessage()
         {
@@ -263,7 +263,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class MushroomFood : Food
+    public partial class MushroomFood : Food
     {
         public override string GetMessage()
         {
@@ -277,7 +277,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class PizzaFood : Food
+    public partial class PizzaFood : Food
     {
         public override string GetMessage()
         {
@@ -304,7 +304,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SteakFood : Food
+    public partial class SteakFood : Food
     {
         public override string GetMessage()
         {
@@ -318,7 +318,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class MilkFood : Food
+    public partial class MilkFood : Food
     {
         public int HitPoints { get; set; }
         public int AttackPoints { get; set; }

@@ -2,7 +2,7 @@ using Godot;
 using System;
 using AnimalHurtedLib;
 
-public class CardArea2D : Area2D
+public partial class CardArea2D : Area2D
 {
     Vector2 _defaultPosition;
     Vector2 _dragLocalMousePos;
@@ -12,15 +12,16 @@ public class CardArea2D : Area2D
     bool _showLevelLabel;
     float[] _foodAbilityModulateValues = new float[2] { 0.0f, 1.0f };
 
+    private Tween _foodAbilityModulateTween;
+    private Tween _foodAbilityPositionTween;
+
     public CardSlotNode2D CardSlotNode2D { get { return GetParent() as CardSlotNode2D; } }
 
     public int CardIndex { get { return _cardIndex; } }
 
-    public Sprite Sprite { get { return GetNode<Sprite>("Sprite"); } }
-    public Sprite FrozenSprite { get { return GetNode<Sprite>("FrozenSprite"); } }
-    public Sprite FoodAbilitySprite { get { return GetNode<Sprite>("FoodAbilitySprite"); } }
-    public Tween FoodAbilityModulateTween { get { return GetNode<Tween>("FoodAbilityModulateTween"); } }
-    public Tween FoodAbilityPositionTween { get { return GetNode<Tween>("FoodAbilityPositionTween"); } }
+    public Sprite2D Sprite2D { get { return GetNode<Sprite2D>("Sprite2D"); } }
+    public Sprite2D FrozenSprite { get { return GetNode<Sprite2D>("FrozenSprite"); } }
+    public Sprite2D FoodAbilitySprite { get { return GetNode<Sprite2D>("FoodAbilitySprite"); } }
     public CollisionShape2D CollisionShape2D { get { return GetNode<CollisionShape2D>("CollisionShape2D"); } }
 
     public CardAttrsNode2D CardAttrsNode2D { get { return GetNode<CardAttrsNode2D>("CardAttrsNode2D"); } }
@@ -36,11 +37,11 @@ public class CardArea2D : Area2D
     public Timer CardReorderTimer { get { return GetNode<Timer>("CardReorderTimer"); } }
 
     [Signal]
-    public delegate void StartStopDragSignal();
+    public delegate void StartStopDragSignalEventHandler();
 
     public void HideCard()
     {
-        Sprite.Hide();
+        Sprite2D.Hide();
         FrozenSprite.Hide();
         FoodAbilitySprite.Hide();
         CardAttrsNode2D.Hide();
@@ -49,7 +50,7 @@ public class CardArea2D : Area2D
 
     public void ShowCard(Card card)
     {
-        Sprite.Show();
+        Sprite2D.Show();
         FrozenSprite.Visible = card.Frozen;
         CardAttrsNode2D.Show();
         if (_showLevelLabel)
@@ -58,10 +59,9 @@ public class CardArea2D : Area2D
 
     void StartFoodAbilityModulateTween()
     {
-        FoodAbilityModulateTween.InterpolateProperty(FoodAbilitySprite, "modulate:a",
-            _foodAbilityModulateValues[0], _foodAbilityModulateValues[1], 2f, 
-            Tween.TransitionType.Linear, Tween.EaseType.In);
-        FoodAbilityModulateTween.Start();
+        _foodAbilityModulateTween.Kill();
+        _foodAbilityModulateTween.TweenProperty(FoodAbilitySprite, "modulate:a",
+            _foodAbilityModulateValues[1], 2f).SetTrans(Tween.TransitionType.Linear).SetEase(Tween.EaseType.In);
     }
 
     public void RenderCard(Card card, int index, bool showLevelLabel = true)
@@ -75,7 +75,7 @@ public class CardArea2D : Area2D
         else
         {
             var res = GD.Load($"res://Assets/Pets/{card.RenderAbility.GetType().Name}.png");
-            Sprite.Texture = res as Godot.Texture;
+            Sprite2D.Texture = res as Godot.Texture2D;
             AttackPointsLabel.Text = card.TotalAttackPoints.ToString();
             if (card.BuildAttackPoints > 0)
                 AttackPointsLabel.Text += "*";
@@ -87,7 +87,7 @@ public class CardArea2D : Area2D
             if (card.FoodAbility != null)
             {
                 res = GD.Load($"res://Assets/FoodAbilities/{card.FoodAbility.GetType().Name}.png");
-                FoodAbilitySprite.Texture = res as Godot.Texture;
+                FoodAbilitySprite.Texture = res as Godot.Texture2D;
                 FoodAbilitySprite.Show();
             }
             else
@@ -105,7 +105,7 @@ public class CardArea2D : Area2D
     public void _on_Area2D_mouse_entered()
     {
         CardSlotNode2D.HoverSprite.Show();
-        if (Sprite.Visible && !GameSingleton.Instance.Dragging)
+        if (Sprite2D.Visible && !GameSingleton.Instance.Dragging)
         {
             // can be null if just previewing the scene in godot
             if (CardSlotNode2D.CardSlotDeck.Deck != null)
@@ -135,7 +135,7 @@ public class CardArea2D : Area2D
         {
             GameSingleton.Instance.DragTarget = this;
             // check make sure we're visible and not dragging food
-            if (Sprite.Visible && GameSingleton.Instance.DragSource is CardArea2D)
+            if (Sprite2D.Visible && GameSingleton.Instance.DragSource is CardArea2D)
             {
                 // every card has their own timer which can start from a mouse entered event
                 // and is stopped from a card exit event
@@ -152,7 +152,7 @@ public class CardArea2D : Area2D
             DragParent.DragReorder(this);
             // if after re-order, the sprite is now not visible (e.g. empty slot was created), set the DragTarget
 			// to this empty slot
-            if (!Sprite.Visible)
+            if (!Sprite2D.Visible)
                 GameSingleton.Instance.DragTarget = this;
         }
         _cancelCardReorder = true;
@@ -197,7 +197,7 @@ public class CardArea2D : Area2D
         {
             var mouseEvent = @event as InputEventMouseButton;
             // mouse down
-            if (Sprite.Visible && mouseEvent.ButtonIndex == (int)ButtonList.Left && 
+            if (Sprite2D.Visible && mouseEvent.ButtonIndex == MouseButton.Left && 
                 mouseEvent.Pressed)
             {
                 CardSlotNode2D.Selected = !CardSlotNode2D.Selected;
@@ -209,9 +209,9 @@ public class CardArea2D : Area2D
             else
             {
                 // mouse up
-                if (Sprite.Visible && 
+                if (Sprite2D.Visible && 
                     GameSingleton.Instance.Dragging && GameSingleton.Instance.DragSource == this && 
-                    mouseEvent.ButtonIndex == (int)ButtonList.Left && 
+                    mouseEvent.ButtonIndex == MouseButton.Left && 
                     !mouseEvent.Pressed)
                 {
                     EmitSignal("StartStopDragSignal");
@@ -256,18 +256,23 @@ public class CardArea2D : Area2D
 
     public override void _Ready()
     {
-        Connect("StartStopDragSignal", this, "_signal_StartStopDrag");
+        Connect("StartStopDragSignal", new Callable(this, "_signal_StartStopDrag"));
+
+        _foodAbilityModulateTween = CreateTween();
+        _foodAbilityPositionTween = CreateTween();
         _defaultPosition = Position;
         _defaultZIndex = ZIndex;
+
         StartFoodAbilityModulateTween();
-        FoodAbilityPositionTween.InterpolateProperty(FoodAbilitySprite, "position",
-            new Vector2(Sprite.Position.x + 40, Sprite.Position.y + 40), 
-            new Vector2(Sprite.Position.x - 40, Sprite.Position.y - 40), 4f, 
-            Tween.TransitionType.Linear, Tween.EaseType.In);
-        FoodAbilityPositionTween.Start();
+
+        _foodAbilityPositionTween.Kill();
+        _foodAbilityPositionTween.TweenProperty(FoodAbilitySprite, "position",
+            new Vector2(Sprite2D.Position.X - 40, Sprite2D.Position.Y - 40), 4f)
+            .SetTrans(Tween.TransitionType.Linear).SetEase(Tween.EaseType.In);
+        _foodAbilityPositionTween.SetLoops();
     }
 
-    public override void _Process(float delta)
+    public override void _Process(double delta)
     {
         if (GameSingleton.Instance.Dragging && GameSingleton.Instance.DragSource == this)
         {

@@ -1,57 +1,50 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://b71iqhjnml0jf"]
 
-[ext_resource path="res://Assets/PartyConfettiRegular-eZOn3.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Assets/heart.png" type="Texture" id=2]
-[ext_resource path="res://Scenes/WinnerNode.cs" type="Script" id=3]
+[ext_resource type="FontFile" uid="uid://d28v0knlsvjsk" path="res://Assets/PartyConfettiRegular-eZOn3.ttf" id="1"]
+[ext_resource type="Texture2D" uid="uid://i7up4lf5wnxo" path="res://Assets/heart.png" id="2"]
+[ext_resource type="Script" uid="uid://4q1quvkbddod" path="res://Scenes/WinnerNode.cs" id="3"]
 
-[sub_resource type="ParticlesMaterial" id=2]
-flag_disable_z = true
-direction = Vector3( 0, 0, 0 )
+[sub_resource type="ParticleProcessMaterial" id="2"]
+direction = Vector3(0, 0, 0)
 spread = 180.0
 flatness = 1.0
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 400.0
-initial_velocity_random = 0.5
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-linear_accel = 100.0
-linear_accel_random = 1.0
-scale = 2.0
-color = Color( 1, 1, 1, 0.196078 )
+gravity = Vector3(0, 0, 0)
+scale_min = 0.0
+scale_max = 0.0
+color = Color(1, 1, 1, 0.196078)
 
-[sub_resource type="DynamicFont" id=1]
-size = 48
-font_data = ExtResource( 1 )
+[sub_resource type="FontFile" id="1"]
+fallbacks = Array[Font]([ExtResource("1")])
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
 
 [node name="Node" type="Node"]
-script = ExtResource( 3 )
+script = ExtResource("3")
 
 [node name="ColorRect" type="ColorRect" parent="."]
-margin_right = 1280.0
-margin_bottom = 720.0
-color = Color( 0, 0, 0, 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 1)
 
-[node name="Particles2D" type="Particles2D" parent="."]
-position = Vector2( 648, 352 )
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+position = Vector2(648, 352)
 amount = 200
+texture = ExtResource("2")
 lifetime = 2.0
-process_material = SubResource( 2 )
-texture = ExtResource( 2 )
+process_material = SubResource("2")
 
 [node name="WonLabel" type="Label" parent="."]
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-margin_left = -208.0
-margin_top = 312.0
-margin_right = 240.0
-margin_bottom = 351.0
-custom_fonts/font = SubResource( 1 )
+offset_left = -208.0
+offset_top = 312.0
+offset_right = 240.0
+offset_bottom = 351.0
+theme_override_fonts/font = SubResource("1")
 text = "Player 1 Won the Game!"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [connection signal="gui_input" from="ColorRect" to="." method="_on_ColorRect_gui_input"]

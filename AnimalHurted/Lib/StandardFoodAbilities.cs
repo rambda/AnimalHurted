@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AnimalHurtedLib
 {
-    public class HoneyBeeAbility : FoodAbility
+    public partial class HoneyBeeAbility : FoodAbility
     {
         public override void Fainted(CardCommandQueue queue, Card card, int index)
         {
@@ -15,7 +15,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class BoneAttackAbility : FoodAbility
+    public partial class BoneAttackAbility : FoodAbility
     {
         public override void CalculatingDamage(Card card, ref int damage)
         {
@@ -24,7 +24,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class GarlicArmorAbility : FoodAbility
+    public partial class GarlicArmorAbility : FoodAbility
     {
         public override void Hurting(Card card, ref int damage)
         {
@@ -33,7 +33,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class MelonArmorAbility : FoodAbility
+    public partial class MelonArmorAbility : FoodAbility
     {
         public override void Hurting(Card card, ref int damage)
         {
@@ -43,7 +43,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SplashAttackAbility : FoodAbility
+    public partial class SplashAttackAbility : FoodAbility
     {
         public override void Attacking(CardCommandQueue queue, Card card, Card opponentCard = null)
         {
@@ -60,7 +60,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class CoconutShieldAbility : FoodAbility
+    public partial class CoconutShieldAbility : FoodAbility
     {
         public override void Hurting(Card card, ref int damage)
         {
@@ -72,7 +72,7 @@ namespace AnimalHurtedLib
        }       
     }
 
-    public class SteakAttackAbility : FoodAbility
+    public partial class SteakAttackAbility : FoodAbility
     {
         public override void CalculatingDamage(Card card, ref int damage)
         {
@@ -82,7 +82,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ExtraLifeAbility : FoodAbility
+    public partial class ExtraLifeAbility : FoodAbility
     {
         public override void Fainted(CardCommandQueue queue, Card card, int index)
         {

@@ -7,14 +7,14 @@ public interface ICardSlotDeck
     Deck Deck { get; }
 }
 
-public class CardSlotNode2D : Node2D
+public partial class CardSlotNode2D : Node2D
 {
     bool _selected;
 
     public CardArea2D CardArea2D { get { return GetNode<CardArea2D>("CardArea2D"); } }
-    public Sprite HoverSprite { get { return GetNode<Sprite>("HoverSprite"); } }
+    public Sprite2D HoverSprite { get { return GetNode<Sprite2D>("HoverSprite"); } }
     public Node2D AbilityHintNode2D { get { return GetNode<Node2D>("AbilityHintNode2D"); } }
-    public Sprite SelectedSprite { get { return GetNode<Sprite>("SelectedSprite"); } }
+    public Sprite2D SelectedSprite { get { return GetNode<Sprite2D>("SelectedSprite"); } }
     public ICardSlotDeck CardSlotDeck { get { return GetParent() as ICardSlotDeck; } }
 
     public void ClearSelected()

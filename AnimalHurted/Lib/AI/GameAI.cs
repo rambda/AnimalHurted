@@ -11,7 +11,7 @@ namespace AnimalHurtedLib.AI
 {
     public enum MoveActionEnum { Buy, BuyFood, Reorder, Roll }
 
-    public class MoveAction
+    public partial class MoveAction
     {
         public virtual void Execute(Move move, Player player, List<CardCommandQueue> result)
         {
@@ -19,7 +19,7 @@ namespace AnimalHurtedLib.AI
         }
     }
 
-    public class BuyAction : MoveAction
+    public partial class BuyAction : MoveAction
     {
         public int ShopIndex { get; set; }
         public int TargetIndex { get; set; }
@@ -62,7 +62,7 @@ namespace AnimalHurtedLib.AI
         }
     }
 
-    public class BuyFoodAction : MoveAction
+    public partial class BuyFoodAction : MoveAction
     {
         public int FoodIndex { get; set; }
         public int TargetIndex { get; set; }
@@ -86,7 +86,7 @@ namespace AnimalHurtedLib.AI
         }
     }
 
-    public class ReorderAction : MoveAction
+    public partial class ReorderAction : MoveAction
     {
         public int FromIndex { get; set; }
         public int ToIndex { get; set; }
@@ -119,7 +119,7 @@ namespace AnimalHurtedLib.AI
         }
     }
 
-    public class RollAction : MoveAction
+    public partial class RollAction : MoveAction
     {
         public override void Execute(Move move, Player player, List<CardCommandQueue> result)
         {
@@ -130,7 +130,7 @@ namespace AnimalHurtedLib.AI
     }
 
     /// A Move represents one permutation of actions the AI can perform in the build phase before the battle
-    public class Move : MonteCarlo.IAction
+    public partial class Move : MonteCarlo.IAction
     {
         List<MoveAction> _actions = new List<MoveAction>();
         List<CardCommandQueue> _result;
@@ -236,7 +236,7 @@ namespace AnimalHurtedLib.AI
     }
 
     // Helper class to support IPlayer interface from the MCTS library
-    public class GameAIPlayer : MonteCarlo.IPlayer
+    public partial class GameAIPlayer : MonteCarlo.IPlayer
     {
         Player _player;
 
@@ -261,7 +261,7 @@ namespace AnimalHurtedLib.AI
     }
 
     // state class is attached to each node in the tree
-    public class GameAIState : MonteCarlo.IState<GameAIPlayer, Move>
+    public partial class GameAIState : MonteCarlo.IState<GameAIPlayer, Move>
     {
         bool _rootState;
         Game _game;
@@ -364,7 +364,7 @@ namespace AnimalHurtedLib.AI
 
         public GameAIPlayer CurrentPlayer { get { return _currentPlayer; } }
 
-        public double GetResult(GameAIPlayer player)
+        public double GetData(GameAIPlayer player)
         { 
             // ignore player param since it's from cloned state
             var currentPlayer = _player2.Player;

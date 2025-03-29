@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace AnimalHurtedLib
 
     public enum FightResultEnum { Won, Lost, Draw }
 
-    public class Game
+    public partial class Game
     {
         readonly Random _random;
         readonly Player _player1;

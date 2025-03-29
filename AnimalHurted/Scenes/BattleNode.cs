@@ -14,7 +14,7 @@ public interface IBattleNode
     CardCommandQueueReader Reader { get; }
 }
 
-public class BattleNode : Node, IBattleNode
+public partial class BattleNode : Node, IBattleNode
 {
     bool _playingAttack;
     bool _playingBattle;
@@ -41,7 +41,7 @@ public class BattleNode : Node, IBattleNode
     public FileDialog SaveFileDialog { get { return GetNode<FileDialog>("SaveFileDialog"); } } 
 
     [Signal]
-    public delegate void ExecuteQueueOverSignal();
+    public delegate void ExecuteQueueOverSignalEventHandler();
 
     protected override void Dispose(bool disposing)
     {
@@ -57,11 +57,11 @@ public class BattleNode : Node, IBattleNode
 
     public override void _Ready()
     {
-        Connect("ExecuteQueueOverSignal", this, "_signal_ExecuteQueueOver", null, 
+        Connect(SignalName.ExecuteQueueOverSignal, Callable.From(_signal_ExecuteQueueOver),
             // important to be Deferred because it ensures that all tweens will be freed
             // before the next set of animation events fire off -- so a new "tween_completed"
             // signal can be invoked
-            (int)ConnectFlags.Deferred);
+            (uint)ConnectFlags.Deferred);
 
         GetNode<Slider>("SpeedSlider").Value = GameSingleton.Instance.BattleSpeed;
         SetMaxTimePerEvent();
@@ -91,7 +91,7 @@ public class BattleNode : Node, IBattleNode
             GameSingleton.Instance.FightResult = GameSingleton.Instance.Game.CreateFightResult();
             // restore for rendering in next scene
             GameSingleton.Instance.RestoreBattleDecks();
-            GetTree().ChangeScene("res://Scenes/BattleNode.tscn");
+            GetTree().ChangeSceneToFile("res://Scenes/BattleNode.tscn");
         }
         #endif
     } 
@@ -99,20 +99,20 @@ public class BattleNode : Node, IBattleNode
     public void _on_ContinueButton_pressed()
     {
         if (GameSingleton.Instance.Sandboxing)
-            GetTree().ChangeScene("res://Scenes/SandboxNode.tscn");
+            GetTree().ChangeSceneToFile("res://Scenes/SandboxNode.tscn");
         else
         {
             if (GameSingleton.Instance.Game.IsGameOver())
             {
                 if (GameSingleton.Instance.GameOverShown)
-                    GetTree().ChangeScene("res://Scenes/MainNode.tscn");
+                    GetTree().ChangeSceneToFile("res://Scenes/MainNode.tscn");
                 else
-                    GetTree().ChangeScene("res://Scenes/WinnerNode.tscn");
+                    GetTree().ChangeSceneToFile("res://Scenes/WinnerNode.tscn");
             }
             else
             {
                 GameSingleton.Instance.BuildNodePlayer = GameSingleton.Instance.Game.Player1; 
-                GetTree().ChangeScene("res://Scenes/BuildNode.tscn");
+                GetTree().ChangeSceneToFile("res://Scenes/BuildNode.tscn");
             }
         }
     }
@@ -157,8 +157,8 @@ public class BattleNode : Node, IBattleNode
             if (_reader.Finished)
                 BeginReplay();
             
-            PlayOneButton.TextureNormal = GD.Load<Texture>($"res://Assets/pause_button.png");
-            PlayOneButton.TexturePressed = GD.Load<Texture>($"res://Assets/pause_button_pressed.png");
+            PlayOneButton.TextureNormal = GD.Load<Texture2D>($"res://Assets/pause_button.png");
+            PlayOneButton.TexturePressed = GD.Load<Texture2D>($"res://Assets/pause_button_pressed.png");
 
             _playingBattle = true;
             ReplayButton.Disabled = true;
@@ -174,8 +174,8 @@ public class BattleNode : Node, IBattleNode
         {
             if (_reader.Finished || _battleStopped)
             {
-                PlayOneButton.TextureNormal = GD.Load<Texture>($"res://Assets/play_one_button.png");
-                PlayOneButton.TexturePressed = GD.Load<Texture>($"res://Assets/play_one_button_pressed.png");
+                PlayOneButton.TextureNormal = GD.Load<Texture2D>($"res://Assets/play_one_button.png");
+                PlayOneButton.TexturePressed = GD.Load<Texture2D>($"res://Assets/play_one_button_pressed.png");
 
                 _playingBattle = false;
                 _battleStopped = false;
@@ -219,41 +219,32 @@ public class BattleNode : Node, IBattleNode
     {
         await PositionDecks();
 
-        var tween1 = new Tween();
-        AddChild(tween1);
-        var tween2 = new Tween();
-        AddChild(tween2);
+        var tween1 = CreateTween();
+        var tween2 = CreateTween();
 
         float rotationTime = MaxTimePerEvent;
 
         var card1 = GameSingleton.Instance.Game.Player1.BattleDeck.GetLastCard();
         var cardSlot1 = Player1DeckNode2D.GetCardSlotNode2D(card1.Index + 1);
-        tween1.InterpolateProperty(cardSlot1.CardArea2D.Sprite, "rotation",
-            0, // radians
-            0.5, // radians; about 30 degrees 
-            rotationTime, Tween.TransitionType.Expo, Tween.EaseType.Out);
-        tween1.Start();
+        tween1.TweenProperty(cardSlot1.CardArea2D.Sprite2D, "rotation",
+            0.5, // radians; about 30 degrees
+            rotationTime).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
 
         var card2 = GameSingleton.Instance.Game.Player2.BattleDeck.GetLastCard();
         var cardSlot2 = Player2DeckNode2D.GetCardSlotNode2D(card2.Index + 1);
-        tween2.InterpolateProperty(cardSlot2.CardArea2D.Sprite, "rotation",
-            0, // radians 
+        tween2.TweenProperty(cardSlot2.CardArea2D.Sprite2D, "rotation",
             -0.5, // radians; about -30 degrees
-            rotationTime, Tween.TransitionType.Expo, Tween.EaseType.Out);
-        tween2.Start();
+            rotationTime).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
 
-        await ToSignal(tween1, "tween_all_completed");
+        await ToSignal(tween1, "finished");
 
-        tween1.QueueFree();
-        tween2.QueueFree();
-
-        cardSlot1.CardArea2D.Sprite.Rotation = 0;
-        cardSlot2.CardArea2D.Sprite.Rotation = 0;
+        cardSlot1.CardArea2D.Sprite2D.Rotation = 0;
+        cardSlot2.CardArea2D.Sprite2D.Rotation = 0;
 
         cardSlot2.CardArea2D.RenderCard(card2, card2.Index);
         cardSlot1.CardArea2D.RenderCard(card1, card1.Index);
 
-        //TODO: if a knockout, play additional knockout sound clip
+        // TODO: if a knockout, play additional knockout sound clip
         FightPlayer.Play();
 
         command.UserEvent?.Invoke(this, EventArgs.Empty);
@@ -283,7 +274,7 @@ public class BattleNode : Node, IBattleNode
             deckNode2D.WhooshPlayer.Play();
 
             var damageArea2DScene = (PackedScene)ResourceLoader.Load("res://Scenes/DamageArea2D.tscn");
-            Area2D damageArea2D = damageArea2DScene.Instance() as Area2D;
+            Area2D damageArea2D = damageArea2DScene.Instantiate() as Area2D;
             AddChild(damageArea2D);
             damageArea2D.GlobalPosition = sourceCardSlot.GlobalPosition;
 
@@ -301,10 +292,6 @@ public class BattleNode : Node, IBattleNode
     {
         float moveSpeed = MaxTimePerEvent;
 
-        // when repositioning, other animations might still be going
-        // so add small delay to allow those animations to complete in order
-        // for them to be shown associated with the correct card slots
-
         await ToSignal(GetTree().CreateTimer(MaxTimePerEvent), "timeout");
 
         if (hideCardSlots)
@@ -313,10 +300,8 @@ public class BattleNode : Node, IBattleNode
             Player2DeckNode2D.HideEndingCardSlots();
         }
 
-        var tween1 = new Tween();
-        AddChild(tween1);
-        var tween2 = new Tween();
-        AddChild(tween2);
+        var tween1 = CreateTween();
+        var tween2 = CreateTween();
 
         var lastVisibleCardSlot = Player1DeckNode2D.GetEndingVisibleCardSlot();
         Tween awaitTween = null;
@@ -324,11 +309,9 @@ public class BattleNode : Node, IBattleNode
         {
             var destination = _player1DeckPosition;
             var lastCardSlot = Player1DeckNode2D.GetCardSlotNode2D(5);
-            destination.x += lastCardSlot.GlobalPosition.x - lastVisibleCardSlot.GlobalPosition.x;
-            tween1.InterpolateProperty(Player1DeckNode2D, "position",
-                Player1DeckNode2D.Position, destination, moveSpeed, Tween.TransitionType.Expo, 
-                Tween.EaseType.Out);
-            tween1.Start();
+            destination.X += lastCardSlot.GlobalPosition.X - lastVisibleCardSlot.GlobalPosition.X;
+            tween1.TweenProperty(Player1DeckNode2D, "position",
+                destination, moveSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
             awaitTween = tween1;
         }
 
@@ -337,20 +320,16 @@ public class BattleNode : Node, IBattleNode
         {
             var destination = _player2DeckPosition;
             var lastCardSlot = Player2DeckNode2D.GetCardSlotNode2D(5);
-            destination.x -= lastVisibleCardSlot.GlobalPosition.x - lastCardSlot.GlobalPosition.x;
-            tween2.InterpolateProperty(Player2DeckNode2D, "position",
-                Player2DeckNode2D.Position, destination, moveSpeed, Tween.TransitionType.Expo, 
-                Tween.EaseType.Out);
-            tween2.Start();
+            destination.X -= lastVisibleCardSlot.GlobalPosition.X - lastCardSlot.GlobalPosition.X;
+            tween2.TweenProperty(Player2DeckNode2D, "position",
+                destination, moveSpeed).SetTrans(Tween.TransitionType.Expo).SetEase(Tween.EaseType.Out);
             if (awaitTween == null)
                 awaitTween = tween2;
         }
 
         if (awaitTween != null)
-            await ToSignal(awaitTween, "tween_all_completed");
+            await ToSignal(awaitTween, "finished");
 
-        tween1.QueueFree();
-        tween2.QueueFree();
     }
 
     public void _on_SaveButton_pressed()
@@ -358,7 +337,7 @@ public class BattleNode : Node, IBattleNode
         SaveFileDialog.PopupCentered();
     }
 
-    public void _on_FileDialog_file_selected(Godot.Path @string)
+    public void _on_FileDialog_file_selected(Godot.Path3D @string)
     {
         // restore battle decks before serializing them
         BeginReplay();

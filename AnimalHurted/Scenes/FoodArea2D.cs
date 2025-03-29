@@ -2,24 +2,24 @@ using System;
 using Godot;
 using AnimalHurtedLib;
 
-public class FoodArea2D : Area2D
+public partial class FoodArea2D : Area2D
 {
     Vector2 _defaultPosition;
     Vector2 _dragLocalMousePos;
     int _defaultZIndex;
 
-    public Sprite Sprite { get { return GetNode<Sprite>("Sprite"); } }
+    public Sprite2D Sprite2D { get { return GetNode<Sprite2D>("Sprite2D"); } }
     public IDragParent DragParent { get { return GetParent().GetParent() as IDragParent; } } 
     public BuildNode BuildNode { get { return GetParent().GetParent() as BuildNode; } }
     public int Index { get; set; }
 
     [Signal]
-    public delegate void StartStopDragSignal();
+    public delegate void StartStopDragSignalEventHandler();
 
     public void _on_Area2D_mouse_entered()
     {
-        GetParent().GetNode<Sprite>("HoverSprite").Show();
-        if (Sprite.Visible && !GameSingleton.Instance.Dragging)
+        GetParent().GetNode<Sprite2D>("HoverSprite").Show();
+        if (Sprite2D.Visible && !GameSingleton.Instance.Dragging)
         {
             var node2D = GetParent().GetNode<Node2D>("AbilityHintNode2D");
             Food food;
@@ -39,7 +39,7 @@ public class FoodArea2D : Area2D
 
     public void _on_Area2D_mouse_exited()
     {
-        GetParent().GetNode<Sprite>("HoverSprite").Hide();
+        GetParent().GetNode<Sprite2D>("HoverSprite").Hide();
         GetParent().GetNode<Node2D>("AbilityHintNode2D").Hide();
     }
 
@@ -49,7 +49,7 @@ public class FoodArea2D : Area2D
         {
             var mouseEvent = @event as InputEventMouseButton;
             // mouse down
-            if (Sprite.Visible && mouseEvent.ButtonIndex == (int)ButtonList.Left && 
+            if (Sprite2D.Visible && mouseEvent.ButtonIndex == MouseButton.Left && 
                 mouseEvent.Pressed)
             {
                 Food food;
@@ -63,9 +63,8 @@ public class FoodArea2D : Area2D
             else
             {
                 // mouse up
-                if (Sprite.Visible && GameSingleton.Instance.DragSource == this &&
-                    mouseEvent.ButtonIndex == (int)ButtonList.Left && 
-                    !mouseEvent.Pressed)
+                if (Sprite2D.Visible && GameSingleton.Instance.DragSource == this &&
+                    mouseEvent.ButtonIndex == MouseButton.Left && !mouseEvent.Pressed)
                 {
                     EmitSignal("StartStopDragSignal");
                 }
@@ -139,12 +138,12 @@ public class FoodArea2D : Area2D
 
     public override void _Ready()
     {
-        Connect("StartStopDragSignal", this, "_signal_StartStopDrag");
+        Connect("StartStopDragSignal", new Callable(this, "_signal_StartStopDrag"));
         _defaultPosition = Position;
         _defaultZIndex = ZIndex;
     }
 
-    public override void _Process(float delta)
+    public override void _Process(double delta)
     {
         if (GameSingleton.Instance.Dragging && GameSingleton.Instance.DragSource == this)
         {

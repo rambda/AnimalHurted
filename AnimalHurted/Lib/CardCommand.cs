@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace AnimalHurtedLib
 {
-    public class CardCommand
+    public partial class CardCommand
     {
         int _index;
         Deck _deck;
@@ -49,7 +49,7 @@ namespace AnimalHurtedLib
         public EventHandler UserEvent;
     }
 
-    public class MoveCardsCommand : CardCommand
+    public partial class MoveCardsCommand : CardCommand
     {
         List<(int from, int to)> _indexes;
 
@@ -68,7 +68,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class AttackCardCommand : CardCommand
+    public partial class AttackCardCommand : CardCommand
     {
         Deck _opponentDeck;
         int _opponentIndex;
@@ -102,7 +102,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class GainFoodAbilityCommand : CardCommand
+    public partial class GainFoodAbilityCommand : CardCommand
     {
         FoodAbility _foodAbility;
 
@@ -119,7 +119,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class FaintCardCommand : CardCommand
+    public partial class FaintCardCommand : CardCommand
     {
         Card _faintedCard;
         bool _attacking;
@@ -149,7 +149,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class HurtCardCommand : CardCommand
+    public partial class HurtCardCommand : CardCommand
     {
         int _sourceIndex;
         int _damage;
@@ -189,7 +189,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class BuffCardCommand : CardCommand
+    public partial class BuffCardCommand : CardCommand
     {
         int _sourceIndex; 
         int _hitPoints;
@@ -214,7 +214,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SummonCardCommand : CardCommand
+    public partial class SummonCardCommand : CardCommand
     {
         Type _abilityType;
         int _atIndex;

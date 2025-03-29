@@ -2,9 +2,9 @@ using Godot;
 using System;
 using AnimalHurtedLib;
 
-public class SandboxItemNode : PanelContainer, IDragParent
+public partial class SandboxItemNode : PanelContainer, IDragParent
 {
-    Sprite _dragSprite;
+    Sprite2D _dragSprite;
 
     public TextureRect TextureRect { get { return GetNode<TextureRect>("TextureRect"); } }
 
@@ -13,11 +13,11 @@ public class SandboxItemNode : PanelContainer, IDragParent
     public string TypeName { get; set; }
 
     [Signal]
-    public delegate void StartStopDragSignal();
+    public delegate void StartStopDragSignalEventHandler();
 
     public override void _Ready()
     {
-        Connect("StartStopDragSignal", this, "_signal_StartStopDrag", null, (int)ConnectFlags.Deferred);
+        Connect(SignalName.StartStopDragSignal, Callable.From(_signal_StartStopDrag), (uint)ConnectFlags.Deferred);
     }
 
     public async void _on_PanelContainer_gui_input(InputEvent @event)
@@ -26,7 +26,7 @@ public class SandboxItemNode : PanelContainer, IDragParent
         {
             var mouseEvent = @event as InputEventMouseButton;
             // mouse down
-            if (mouseEvent.ButtonIndex == (int)ButtonList.Left &&
+            if (mouseEvent.ButtonIndex == MouseButton.Left &&
                 mouseEvent.Pressed)
             {
                 EmitSignal("StartStopDragSignal");
@@ -34,7 +34,7 @@ public class SandboxItemNode : PanelContainer, IDragParent
             else
             {
                 // mouse up
-                if (mouseEvent.ButtonIndex == (int)ButtonList.Left && !mouseEvent.Pressed)
+                if (mouseEvent.ButtonIndex == MouseButton.Left && !mouseEvent.Pressed)
                 {
                     if (GameSingleton.Instance.Dragging && GameSingleton.Instance.DragSource == this)
                     {
@@ -57,7 +57,7 @@ public class SandboxItemNode : PanelContainer, IDragParent
         GameSingleton.Instance.Dragging = !GameSingleton.Instance.Dragging;
         if (GameSingleton.Instance.Dragging)
         {
-            _dragSprite = new Sprite();
+            _dragSprite = new Sprite2D();
             _dragSprite.Texture = TextureRect.Texture;
 
             _dragSprite.ZIndex = 101; // so the sprite appears above everything else during drag
@@ -76,7 +76,7 @@ public class SandboxItemNode : PanelContainer, IDragParent
         }
     }
 
-    public override void _Process(float delta)
+    public override void _Process(double delta)
     {
         if (GameSingleton.Instance.Dragging && GameSingleton.Instance.DragSource == this)
         {

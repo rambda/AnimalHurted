@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace AnimalHurtedLib
 {
     public delegate void GoldChangedEventHandler(object sender, int oldValue);
 
-    public class Player
+    public partial class Player
     {
         readonly Game _game;
         int _lives;

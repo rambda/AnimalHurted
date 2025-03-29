@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AnimalHurtedLib
 {
-    public class AbilityList
+    public partial class AbilityList
     {
         private static AbilityList _instance = null;
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AnimalHurtedLib;
 
-public class GameSingleton
+public partial class GameSingleton
 {
     static GameSingleton _instance;
 

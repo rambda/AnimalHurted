@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace AnimalHurtedLib
 {
-    public class CardCommandQueue : IEnumerable<CardCommand>
+    public partial class CardCommandQueue : IEnumerable<CardCommand>
     {
         List<CardCommand> _list = new List<CardCommand>();
 

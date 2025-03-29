@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class WinnerNode : Node
+public partial class WinnerNode : Node
 {
     public Label WonLabel { get { return GetNode<Label>("WonLabel"); } }
 
@@ -20,10 +20,10 @@ public class WinnerNode : Node
         {
             var mouseEvent = @event as InputEventMouseButton;
             // mouse down
-            if (mouseEvent.ButtonIndex == (int)ButtonList.Left && mouseEvent.Pressed)
+            if (mouseEvent.ButtonIndex == MouseButton.Left && mouseEvent.Pressed)
             {
                 GameSingleton.Instance.RestoreBattleDecks();
-                GetTree().ChangeScene("res://Scenes/BattleNode.tscn");
+                GetTree().ChangeSceneToFile("res://Scenes/BattleNode.tscn");
             }
         }
     }

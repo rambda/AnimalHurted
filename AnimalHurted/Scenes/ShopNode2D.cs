@@ -2,7 +2,7 @@ using System;
 using Godot;
 using AnimalHurtedLib;
 
-public class ShopNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
+public partial class ShopNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
 {
     public BuildNode BuildNode { get { return GetParent() as BuildNode; } }
 

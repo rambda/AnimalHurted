@@ -3,13 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Godot;
 using AnimalHurtedLib;
+using System.Runtime.CompilerServices;
 
 public interface ICardSelectHost
 {
     void SelectionChanged(CardSlotNode2D cardSlot);
 }
 
-public class DeckNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
+public partial class DeckNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
 {
     Deck _deck;
 
@@ -117,7 +118,7 @@ public class DeckNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
 
         // flip the sprite to face other direction
         for (int i = 1; i <= 5; i++)
-            GetCardSlotNode2D(i).CardArea2D.Sprite.FlipH = true;
+            GetCardSlotNode2D(i).CardArea2D.Sprite2D.FlipH = true;
     }
 
     public void HideEndingCardSlots()
@@ -125,7 +126,7 @@ public class DeckNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
         for (int i = 5; i >= 1; i--)
         {
             var cardSlot = GetCardSlotNode2D(i);
-            if (cardSlot.CardArea2D.Sprite.Visible)
+            if (cardSlot.CardArea2D.Sprite2D.Visible)
                 break;
             else
                 cardSlot.Hide();
@@ -143,16 +144,19 @@ public class DeckNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
         return null;
     }
 
+    public static Task ToTask(SignalAwaiter signalAwaiter)
+    {
+        var tcs = new TaskCompletionSource();
+        signalAwaiter.OnCompleted(() => tcs.SetResult());
+        return tcs.Task;
+    }
+
     public static async Task ThrowArea2D(Node parent, Area2D area2D, Vector2 toPosition)
     {
-        var tweenPosX = new Tween();
-        parent.AddChild(tweenPosX);
-        var tweenPosY_Up = new Tween();
-        parent.AddChild(tweenPosY_Up);
-        var tweenPosY_Down = new Tween();
-        parent.AddChild(tweenPosY_Down);
-        var tweenRotate = new Tween();
-        parent.AddChild(tweenRotate);
+        var tweenPosX = parent.CreateTween();
+        var tweenPosY_Up = parent.CreateTween();
+        var tweenPosY_Down = parent.CreateTween();
+        var tweenRotate = parent.CreateTween();
 
         float throwSpeed = (parent as IBattleNode).MaxTimePerEvent;
 
@@ -163,32 +167,32 @@ public class DeckNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
             yDelta *= -1;
         int arcY = 200 + yDelta;
 
-        tweenPosX.InterpolateProperty(area2D, "position:x",
-            area2D.GlobalPosition.x, toPosition.x, throwSpeed, 
-            Tween.TransitionType.Linear, Tween.EaseType.In);
-        tweenPosX.Start();
+        tweenPosX.TweenProperty(area2D, "position:x",
+            toPosition.X, throwSpeed).SetTrans(Tween.TransitionType.Linear).SetEase(Tween.EaseType.In);
 
-        tweenPosY_Up.InterpolateProperty(area2D, "position:y",
-            area2D.GlobalPosition.y, area2D.GlobalPosition.y - arcY, throwSpeed / 2, 
-            Tween.TransitionType.Quad, Tween.EaseType.Out);
-        tweenPosY_Up.Start();
+        tweenPosY_Up.TweenProperty(area2D, "position:y",
+            area2D.GlobalPosition.Y - arcY, throwSpeed / 2).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
 
-        tweenPosY_Down.InterpolateProperty(area2D, "position:y",
-            area2D.GlobalPosition.y - arcY, area2D.GlobalPosition.y, throwSpeed / 2, 
-            Tween.TransitionType.Quad, Tween.EaseType.In, 
-            /* delay going back down! */ throwSpeed / 2);
-        tweenPosY_Down.Start();
+        tweenPosY_Down.TweenProperty(area2D, "position:y",
+            area2D.GlobalPosition.Y, throwSpeed / 2).SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.In);
 
-        tweenRotate.InterpolateProperty(area2D, "rotation",
-            0, 6f, throwSpeed, Tween.TransitionType.Linear, Tween.EaseType.OutIn);
-        tweenRotate.Start();
+        tweenRotate.TweenProperty(area2D, "rotation",
+            6f, throwSpeed).SetTrans(Tween.TransitionType.Linear).SetEase(Tween.EaseType.OutIn);
 
-        await parent.ToSignal(tweenPosX, "tween_all_completed");
+        // await Task.WhenAll(
+        //     tweenPosX.ToSignal(tweenPosX, Tween.SignalName.Finished),
+        //     tweenPosY_Up.ToSignal(tweenPosY_Up, Tween.SignalName.Finished),
+        //     tweenPosY_Down.ToSignal(tweenPosY_Down, Tween.SignalName.Finished),
+        //     tweenRotate.ToSignal(tweenRotate, Tween.SignalName.Finished)
+        // );
 
-        tweenPosX.QueueFree();
-        tweenPosY_Up.QueueFree();
-        tweenPosY_Down.QueueFree();
-        tweenRotate.QueueFree();
+
+        await Task.WhenAll(
+            ToTask(parent.ToSignal(tweenPosX, Tween.SignalName.Finished)),
+            ToTask(parent.ToSignal(tweenPosY_Up, Tween.SignalName.Finished)),
+            ToTask(parent.ToSignal(tweenPosY_Down, Tween.SignalName.Finished)),
+            ToTask(parent.ToSignal(tweenRotate, Tween.SignalName.Finished))
+        );
     }
 
     // IDragParent
@@ -274,25 +278,19 @@ public class DeckNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
     {
         if (command.Deck == this._deck)
         {
-            var tween = new Tween();
-            AddChild(tween);
+            var tween = CreateTween();
 
             float faintTime = BattleNode.MaxTimePerEvent;
 
             var cardSlot = GetCardSlotNode2D(command.Index + 1);
-            tween.InterpolateProperty(cardSlot.CardArea2D.Sprite, "modulate:a",
-                1.0, 0.0, faintTime, Tween.TransitionType.Linear, Tween.EaseType.In);
-            tween.Start();
+            tween.TweenProperty(cardSlot.CardArea2D.Sprite2D, "modulate:a",
+                0.0, faintTime).SetTrans(Tween.TransitionType.Linear).SetEase(Tween.EaseType.In);
 
-            await ToSignal(tween, "tween_all_completed");
+            await ToSignal(tween, "finished");
 
-            tween.QueueFree();
-
-            // restore modulate, even though we're about to hide the sprite
-            // next time something spawns we want modulate to have its restored value
-            var color = cardSlot.CardArea2D.Sprite.Modulate;
-            cardSlot.CardArea2D.Sprite.Modulate = new Color(color.r, color.g,
-                color.b, 1);
+            // Restore modulate, even though we're about to hide the sprite
+            var color = cardSlot.CardArea2D.Sprite2D.Modulate;
+            cardSlot.CardArea2D.Sprite2D.Modulate = new Color(color.R, color.G, color.B, 1);
             cardSlot.CardArea2D.RenderCard(null, command.Index);
 
             command.UserEvent?.Invoke(this, EventArgs.Empty);
@@ -319,7 +317,6 @@ public class DeckNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
             var cardSlot = GetCardSlotNode2D(summonedCommand.AtIndex + 1);
             if (!cardSlot.Visible)
             {
-                // multiple slots prior to cardSlot might be hidden, so restore
                 for (int i = summonedCommand.AtIndex + 1; i >= 0; i--)
                 {
                     var hiddenSlot = GetCardSlotNode2D(i);
@@ -336,24 +333,19 @@ public class DeckNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
 
             cardSlot.CardArea2D.RenderCard(_deck[summonedCommand.AtIndex], summonedCommand.AtIndex);
 
-            var tween = new Tween();
-            AddChild(tween);
+            var tween = CreateTween();
 
             float summonTime = BattleNode.MaxTimePerEvent;
 
-            tween.InterpolateProperty(cardSlot.CardArea2D.Sprite, "scale",
-                new Vector2(1.0f, 1.0f), new Vector2(1.3f, 1.3f), summonTime, Tween.TransitionType.Linear, Tween.EaseType.Out);
-            tween.Start();
+            tween.TweenProperty(cardSlot.CardArea2D.Sprite2D, "scale",
+                new Vector2(1.3f, 1.3f), summonTime).SetTrans(Tween.TransitionType.Linear).SetEase(Tween.EaseType.Out);
 
-            await ToSignal(tween, "tween_all_completed");
+            await ToSignal(tween, "finished");
 
-            tween.QueueFree();
+            cardSlot.CardArea2D.Sprite2D.Scale = new Vector2(1.0f, 1.0f);
 
-            cardSlot.CardArea2D.Sprite.Scale = new Vector2(1.0f, 1.0f);
-
-            // serializing summon events
             BattleNode.Reader.Signal.Release();
-            
+
             command.UserEvent?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -366,11 +358,11 @@ public class DeckNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
             var sourceCardSlot = GetCardSlotNode2D((command as BuffCardCommand).SourceIndex + 1);
 
             var buffArea2DScene = (PackedScene)ResourceLoader.Load("res://Scenes/BuffArea2D.tscn");
-            Area2D buffArea2D = buffArea2DScene.Instance() as Area2D;
+            Area2D buffArea2D = buffArea2DScene.Instantiate() as Area2D;
             GetParent().AddChild(buffArea2D);
             buffArea2D.GlobalPosition = sourceCardSlot.GlobalPosition;
 
-            await DeckNode2D.ThrowArea2D(GetParent(), buffArea2D, cardSlot.GlobalPosition);
+            await ThrowArea2D(GetParent(), buffArea2D, cardSlot.GlobalPosition);
 
             buffArea2D.QueueFree();
 
@@ -395,7 +387,7 @@ public class DeckNode2D : Node2D, IDragParent, ICardSlotDeck, ICardSelectHost
             WhooshPlayer.Play();
 
             var damageArea2DScene = (PackedScene)ResourceLoader.Load("res://Scenes/DamageArea2D.tscn");
-            Area2D damageArea2D = damageArea2DScene.Instance() as Area2D;
+            Area2D damageArea2D = damageArea2DScene.Instantiate() as Area2D;
             GetParent().AddChild(damageArea2D);
             damageArea2D.GlobalPosition = sourceCardSlot.GlobalPosition;
 

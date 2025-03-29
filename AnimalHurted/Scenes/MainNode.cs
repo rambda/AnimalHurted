@@ -3,7 +3,7 @@ using System.IO;
 using Godot;
 using AnimalHurtedLib;
 
-public class MainNode : Node
+public partial class MainNode : Node
 {
     public FileDialog OpenFileDialog { get { return GetNode<FileDialog>("OpenFileDialog"); } } 
     public ConfirmationDialog ConfirmationDialog { get { return GetNode<ConfirmationDialog>("ConfirmationDialog"); } }
@@ -17,19 +17,19 @@ public class MainNode : Node
     {
         base._Ready();
         LoadConfigValues();
-        HardModeCheckBox.Pressed = AISingleton.Instance.HardMode;
+        HardModeCheckBox.ButtonPressed = AISingleton.Instance.HardMode;
     }
 
     public void _on_QuitButton_pressed()
     {
-        GetTree().Notification(NotificationWmQuitRequest);
+        GetTree().Notification((int)Node.NotificationWMCloseRequest);
     }
 
     void NewGame()
     {
         GameSingleton.Instance.NewGame();
 
-        GetTree().ChangeScene("res://Scenes/BuildNode.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/BuildNode.tscn");
     }
 
     public void _on_NewGameButton_pressed()
@@ -46,14 +46,14 @@ public class MainNode : Node
 
     public void _on_HardModeCheckBox_pressed()
     {
-        AISingleton.Instance.HardMode = HardModeCheckBox.Pressed;
+        AISingleton.Instance.HardMode = HardModeCheckBox.ButtonPressed;
     }
 
     public void _on_SettingsButton_pressed()
     {
         var configFile = new ConfigFile();
         configFile.Load(@"user://main.cfg");
-        FullScreenCheckBox.Pressed = (bool)configFile.GetValue("main", "full_screen", true);
+        FullScreenCheckBox.ButtonPressed = (bool)configFile.GetValue("main", "full_screen", true);
         PlayerName1Edit.Text = GameSingleton.Instance.Player1Name;
         PlayerName2Edit.Text = GameSingleton.Instance.Player2Name;
         AINameEdit.Text = GameSingleton.Instance.AIName;
@@ -65,7 +65,7 @@ public class MainNode : Node
         var configFile = new ConfigFile();
         var error = configFile.Load(@"user://main.cfg");
         var fullScreen = (bool)configFile.GetValue("main", "full_screen", true);
-        OS.WindowFullscreen = fullScreen;
+        DisplayServer.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
         GameSingleton.Instance.Player1Name = (string)configFile.GetValue("main", "player1_name", "Player 1");
         GameSingleton.Instance.Player2Name = (string)configFile.GetValue("main", "player2_name", "Player 2");
         GameSingleton.Instance.AIName = (string)configFile.GetValue("main", "ai_name", "AI");
@@ -74,7 +74,7 @@ public class MainNode : Node
     public void _on_ConfirmationDialog_confirmed()
     {
         var configFile = new ConfigFile();
-        configFile.SetValue("main", "full_screen", FullScreenCheckBox.Pressed);
+        configFile.SetValue("main", "full_screen", FullScreenCheckBox.ButtonPressed);
         configFile.SetValue("main", "player1_name", string.IsNullOrEmpty(PlayerName1Edit.Text) ? "Player 1" : PlayerName1Edit.Text);
         configFile.SetValue("main", "player2_name", string.IsNullOrEmpty(PlayerName2Edit.Text) ? "Player 2" : PlayerName2Edit.Text);
         configFile.SetValue("main", "ai_name", string.IsNullOrEmpty(AINameEdit.Text) ? "AI" : AINameEdit.Text);
@@ -92,10 +92,10 @@ public class MainNode : Node
     {
         GameSingleton.Instance.Game = new Game();
         GameSingleton.Instance.Game.NewGame();
-        GetTree().ChangeScene("res://Scenes/SandboxNode.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/SandboxNode.tscn");
     }
 
-    public void _on_OpenFileDialog_file_selected(Godot.Path @string)
+    public void _on_OpenFileDialog_file_selected(Godot.Path3D @string)
     {
         using (FileStream fileStream = new FileStream(ProjectSettings.GlobalizePath(OpenFileDialog.CurrentPath), FileMode.Open))
         {
@@ -118,6 +118,6 @@ public class MainNode : Node
         GameSingleton.Instance.FightResult = GameSingleton.Instance.Game.CreateFightResult();
         GameSingleton.Instance.RestoreBattleDecks();
         GameSingleton.Instance.Sandboxing = true;
-        GetTree().ChangeScene("res://Scenes/BattleNode.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/BattleNode.tscn");
     }
 }

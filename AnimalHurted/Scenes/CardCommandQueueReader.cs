@@ -6,7 +6,7 @@ using System.Threading;
 using Godot;
 using AnimalHurtedLib;
 
-public class CardCommandQueueReader
+public partial class CardCommandQueueReader
 {
     int _queueIndex = -1;
     List<CardCommandQueue> _list;

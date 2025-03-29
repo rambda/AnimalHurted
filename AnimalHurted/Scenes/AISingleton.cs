@@ -11,7 +11,7 @@ using MonteCarlo;
 public delegate void AIProgressDelegate(object sender, int iterationCount, out bool abort);
 public delegate void AIFinishedDelegate(object sender, IOrderedEnumerable<MonteCarloTreeSearch.Node<GameAIPlayer, Move>> result);
 
-public class AISingleton
+public partial class AISingleton
 {
     AIProgressDelegate _aiProgressDelegate;
     AIFinishedDelegate _aiFinishedDelegate;

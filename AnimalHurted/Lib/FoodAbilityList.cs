@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AnimalHurtedLib
 {
-    public class FoodAbilityList
+    public partial class FoodAbilityList
     {
         private static FoodAbilityList _instance = null;
 

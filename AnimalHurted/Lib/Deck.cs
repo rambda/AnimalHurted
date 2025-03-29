@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.IO;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace AnimalHurtedLib
 {
-    public class Deck : IEnumerable<Card>
+    public partial class Deck : IEnumerable<Card>
     {
         readonly Player _player;
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace AnimalHurtedLib
 {
-    public class NoAbility : Ability
+    public partial class NoAbility : Ability
     {
         public NoAbility() : base()
         {
@@ -15,7 +15,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class AntAbility : Ability
+    public partial class AntAbility : Ability
     {
         public AntAbility() : base()
         {
@@ -40,7 +40,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class CricketAbility : Ability
+    public partial class CricketAbility : Ability
     {
         public CricketAbility() : base()
         {
@@ -66,11 +66,11 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ZombieCricketAbility : NoAbility
+    public partial class ZombieCricketAbility : NoAbility
     {
     }
 
-    public class OtterAbility : Ability
+    public partial class OtterAbility : Ability
     {
         public OtterAbility() : base()
         {
@@ -93,7 +93,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class BeaverAbility : Ability
+    public partial class BeaverAbility : Ability
     {
         public BeaverAbility() : base()
         {
@@ -121,7 +121,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class MosquitoAbility : Ability
+    public partial class MosquitoAbility : Ability
     {
         public MosquitoAbility() : base()
         {
@@ -156,7 +156,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class PigAbility : Ability
+    public partial class PigAbility : Ability
     {
         public PigAbility() : base()
         {
@@ -176,7 +176,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class DuckAbility : Ability
+    public partial class DuckAbility : Ability
     {
         public DuckAbility() : base()
         {
@@ -197,7 +197,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class FishAbility : Ability
+    public partial class FishAbility : Ability
     {
         public FishAbility() : base()
         {
@@ -221,7 +221,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class HorseAbility : Ability
+    public partial class HorseAbility : Ability
     {
         public HorseAbility() : base()
         {
@@ -247,7 +247,7 @@ namespace AnimalHurtedLib
     }
 
     // Tier 2
-    public class CrabAbility : Ability
+    public partial class CrabAbility : Ability
     {
         public CrabAbility() : base()
         {
@@ -272,7 +272,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class DodoAbility : Ability
+    public partial class DodoAbility : Ability
     {
         public DodoAbility() : base()
         {
@@ -335,7 +335,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ElephantAbility : Ability
+    public partial class ElephantAbility : Ability
     {
         public ElephantAbility() : base()
         {
@@ -363,7 +363,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class FlamingoAbility : Ability
+    public partial class FlamingoAbility : Ability
     {
         public FlamingoAbility() : base()
         {
@@ -392,7 +392,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class HedgehogAbility : Ability
+    public partial class HedgehogAbility : Ability
     {
         public HedgehogAbility() : base()
         {
@@ -424,7 +424,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class PeacockAbility : Ability
+    public partial class PeacockAbility : Ability
     {
         public PeacockAbility() : base()
         {
@@ -456,7 +456,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class DirtyRatAbility : NoAbility
+    public partial class DirtyRatAbility : NoAbility
     {
         public DirtyRatAbility() : base()
         {
@@ -465,7 +465,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class RatAbility : Ability
+    public partial class RatAbility : Ability
     {
         public RatAbility() : base()
         {
@@ -497,7 +497,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ZombieBeeAbility : NoAbility
+    public partial class ZombieBeeAbility : NoAbility
     {
         public ZombieBeeAbility()
         {
@@ -506,7 +506,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ShrimpAbility : Ability
+    public partial class ShrimpAbility : Ability
     {
         public ShrimpAbility() : base()
         {
@@ -528,7 +528,7 @@ namespace AnimalHurtedLib
         }
     }   
 
-    public class SpiderAbility : Ability
+    public partial class SpiderAbility : Ability
     {
         public SpiderAbility() : base()
         {
@@ -555,7 +555,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SwanAbility : Ability
+    public partial class SwanAbility : Ability
     {
         public SwanAbility() : base()
         {
@@ -576,7 +576,7 @@ namespace AnimalHurtedLib
     }
 
     // Tier 3
-    public class BadgerAbility : Ability
+    public partial class BadgerAbility : Ability
     {
         public BadgerAbility() : base()
         {
@@ -624,7 +624,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class BlowfishAbility : Ability
+    public partial class BlowfishAbility : Ability
     {
         public BlowfishAbility() : base()
         {
@@ -653,7 +653,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class CamelAbility : Ability
+    public partial class CamelAbility : Ability
     {
         public CamelAbility() : base()
         {
@@ -678,7 +678,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class DogAbility : Ability
+    public partial class DogAbility : Ability
     {
         public DogAbility() : base()
         {
@@ -708,7 +708,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class GiraffeAbility : Ability
+    public partial class GiraffeAbility : Ability
     {
         public GiraffeAbility() : base()
         {
@@ -736,7 +736,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class KangarooAbility : Ability
+    public partial class KangarooAbility : Ability
     {
         public KangarooAbility() : base()
         {
@@ -759,7 +759,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class OxAbility : Ability
+    public partial class OxAbility : Ability
     {
         public OxAbility() : base()
         {
@@ -783,7 +783,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class RabbitAbility : Ability
+    public partial class RabbitAbility : Ability
     {
         public RabbitAbility() : base()
         {
@@ -805,7 +805,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SheepAbility : Ability
+    public partial class SheepAbility : Ability
     {
         public SheepAbility() : base()
         {
@@ -835,7 +835,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ZombieRamAbility : NoAbility
+    public partial class ZombieRamAbility : NoAbility
     {
         public ZombieRamAbility()
         {
@@ -844,7 +844,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SnailAbility : Ability
+    public partial class SnailAbility : Ability
     {
         public SnailAbility() : base()
         {
@@ -867,7 +867,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class TurtleAbility : Ability
+    public partial class TurtleAbility : Ability
     {
         public TurtleAbility() : base()
         {
@@ -896,7 +896,7 @@ namespace AnimalHurtedLib
 
 
     // Tier 4
-    public class BisonAbility : Ability
+    public partial class BisonAbility : Ability
     {
         public override string GetAbilityMessage(Card card)
         {
@@ -917,7 +917,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ZombieBusAbility : NoAbility
+    public partial class ZombieBusAbility : NoAbility
     {
         public ZombieBusAbility()
         {
@@ -926,7 +926,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class DeerAbility : Ability
+    public partial class DeerAbility : Ability
     {
         public DeerAbility() : base()
         {
@@ -951,7 +951,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class DolphinAbility : Ability
+    public partial class DolphinAbility : Ability
     {
         public DolphinAbility() : base()
         {
@@ -988,7 +988,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class HippoAbility : Ability
+    public partial class HippoAbility : Ability
     {
         public HippoAbility() : base()
         {
@@ -1011,7 +1011,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ParrotAbility : Ability
+    public partial class ParrotAbility : Ability
     {
         public ParrotAbility() : base()
         {
@@ -1037,7 +1037,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class PenguinAbility : Ability
+    public partial class PenguinAbility : Ability
     {
         public PenguinAbility() : base()
         {
@@ -1061,7 +1061,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ZombieChickAbility : NoAbility
+    public partial class ZombieChickAbility : NoAbility
     {
         public ZombieChickAbility()
         {
@@ -1070,7 +1070,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class RoosterAbility : Ability
+    public partial class RoosterAbility : Ability
     {
         public RoosterAbility() : base()
         {
@@ -1102,7 +1102,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SkunkAbility : Ability
+    public partial class SkunkAbility : Ability
     {
         public SkunkAbility() : base()
         {
@@ -1134,7 +1134,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SquirrelAbility : Ability
+    public partial class SquirrelAbility : Ability
     {
         public SquirrelAbility() : base()
         {
@@ -1157,7 +1157,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class WhaleAbility : Ability
+    public partial class WhaleAbility : Ability
     {
         Card _friendAhead;
 
@@ -1204,7 +1204,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class WormAbility : Ability
+    public partial class WormAbility : Ability
     {
         public WormAbility() : base()
         {
@@ -1226,7 +1226,7 @@ namespace AnimalHurtedLib
 
 
     // Tier 5
-    public class CowAbility : Ability
+    public partial class CowAbility : Ability
     {
         public CowAbility() : base()
         {
@@ -1247,7 +1247,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class CrocodileAbility : Ability
+    public partial class CrocodileAbility : Ability
     {
         public CrocodileAbility() : base()
         {
@@ -1273,7 +1273,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class MonkeyAbility : Ability
+    public partial class MonkeyAbility : Ability
     {
         public MonkeyAbility() : base()
         {
@@ -1295,7 +1295,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class RhinoAbility : Ability
+    public partial class RhinoAbility : Ability
     {
         public RhinoAbility() : base()
         {
@@ -1321,7 +1321,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ScorpionAbility : Ability
+    public partial class ScorpionAbility : Ability
     {
         public ScorpionAbility() : base()
         {
@@ -1344,7 +1344,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SealAbility : Ability
+    public partial class SealAbility : Ability
     {
         public SealAbility() : base()
         {
@@ -1372,7 +1372,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SharkAbility : Ability
+    public partial class SharkAbility : Ability
     {
         public SharkAbility() : base()
         {
@@ -1395,7 +1395,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class TurkeyAbility : Ability
+    public partial class TurkeyAbility : Ability
     {
         public TurkeyAbility() : base()
         {
@@ -1422,7 +1422,7 @@ namespace AnimalHurtedLib
 
 
     // Tier 6
-    public class BoarAbility : Ability
+    public partial class BoarAbility : Ability
     {
         public BoarAbility() : base()
         {
@@ -1445,7 +1445,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class CatAbility : Ability
+    public partial class CatAbility : Ability
     {
         public CatAbility() : base()
         {
@@ -1466,7 +1466,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class DragonAbility : Ability
+    public partial class DragonAbility : Ability
     {
         public DragonAbility() : base()
         {
@@ -1489,7 +1489,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class ZombieFlyAbility : NoAbility
+    public partial class ZombieFlyAbility : NoAbility
     {
         public ZombieFlyAbility() : base()
         {
@@ -1498,7 +1498,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class FlyAbility : Ability
+    public partial class FlyAbility : Ability
     {
         int _summonCount;
 
@@ -1538,7 +1538,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class GorillaAbility : Ability
+    public partial class GorillaAbility : Ability
     {
         int _shieldCount;
 
@@ -1571,7 +1571,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class LeopardAbility : Ability
+    public partial class LeopardAbility : Ability
     {
         public LeopardAbility() : base()
         {
@@ -1606,7 +1606,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class MammothAbility : Ability
+    public partial class MammothAbility : Ability
     {
         public MammothAbility() : base()
         {
@@ -1631,7 +1631,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class SnakeAbility : Ability
+    public partial class SnakeAbility : Ability
     {
         public SnakeAbility() : base()
         {
@@ -1657,7 +1657,7 @@ namespace AnimalHurtedLib
         }
     }
 
-    public class TigerAbility : Ability
+    public partial class TigerAbility : Ability
     {
         public TigerAbility() : base()
         {

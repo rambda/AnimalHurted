@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace AnimalHurtedLib
 {
-    public class FoodAbility
+    public partial class FoodAbility
     {
         public virtual void Fainted(CardCommandQueue queue, Card card, int index)
         {

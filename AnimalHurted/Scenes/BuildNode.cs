@@ -3,7 +3,7 @@ using System.IO;
 using Godot;
 using AnimalHurtedLib;
 
-public class BuildNode : Node, IBattleNode
+public partial class BuildNode : Node, IBattleNode
 {
     Player _player;
     CardCommandQueueReader _reader;
@@ -26,13 +26,13 @@ public class BuildNode : Node, IBattleNode
     public Label PlayerNameLabel { get { return GetNode<Label>("PlayerAttrsNode2D/PlayerNameLabel"); } } 
 
     [Signal]
-    public delegate void ExecuteQueueOverSignal();
+    public delegate void ExecuteQueueOverSignalEventHandler();
 
     public void _on_QuitGameButton_pressed()
     {
         if (GameSingleton.Instance.VersusAI)
             AISingleton.Instance.TerminateAIThread();
-        GetTree().ChangeScene("res://Scenes/MainNode.tscn");
+        GetTree().ChangeSceneToFile("res://Scenes/MainNode.tscn");
     }
 
     public void _on_RollButton_pressed()
@@ -61,11 +61,11 @@ public class BuildNode : Node, IBattleNode
         }
 
         if (GameSingleton.Instance.VersusAI)
-            GetTree().ChangeScene("res://Scenes/AIProgressNode.tscn");
+            GetTree().ChangeSceneToFile("res://Scenes/AIProgressNode.tscn");
         else if (_player == GameSingleton.Instance.Game.Player1)
         {
             GameSingleton.Instance.BuildNodePlayer = GameSingleton.Instance.Game.Player2;
-            GetTree().ChangeScene("res://Scenes/BuildNode.tscn");
+            GetTree().ChangeSceneToFile("res://Scenes/BuildNode.tscn");
         }
         else
             BuildNode.StartBattle(this);
@@ -98,7 +98,7 @@ public class BuildNode : Node, IBattleNode
             // AI starts calculating its move for the next round
             AISingleton.Instance.StartAIThread();
 
-        node.GetTree().ChangeScene("res://Scenes/BattleNode.tscn");
+        node.GetTree().ChangeSceneToFile("res://Scenes/BattleNode.tscn");
     }
 
     public void _on_SellButton_pressed()
@@ -227,8 +227,7 @@ public class BuildNode : Node, IBattleNode
             RenderPlayerFood();
         }
 
-        Connect("ExecuteQueueOverSignal", this, "_signal_ExecuteQueueOver", null, 
-            (int)ConnectFlags.Deferred);
+        Connect(SignalName.ExecuteQueueOverSignal, Callable.From(_signal_ExecuteQueueOver), (uint)GodotObject.ConnectFlags.OneShot);
     }
 
     public void RenderPlayerFood()
@@ -242,13 +241,13 @@ public class BuildNode : Node, IBattleNode
         var foodSlot = GetNode($"FoodSlotNode2D{index}");
         var foodArea2D = foodSlot.GetNode<FoodArea2D>("Area2D");
         foodArea2D.Index = index;
-        var sprite = foodSlot.GetNode<Sprite>("Area2D/Sprite");
+        var sprite = foodSlot.GetNode<Sprite2D>("Area2D/Sprite2D");
         if (playerFood == null)
             sprite.Hide();
         else
         {
             var res = GD.Load($"res://Assets/Food/{playerFood.GetType().Name}.png");
-            sprite.Texture = res as Godot.Texture;
+            sprite.Texture = res as Godot.Texture2D;
             sprite.Show();
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Diagnostics;
@@ -6,7 +6,7 @@ using System.IO;
 
 namespace AnimalHurtedLib
 {
-    public class Card
+    public partial class Card
     {
         readonly Deck _deck;
         Ability _ability;
